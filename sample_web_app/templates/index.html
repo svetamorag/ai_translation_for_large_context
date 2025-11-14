@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Loaded by Flask -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation Agent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body style="background-image:url({{ url_for('static', filename='images/background_blue.png') }});">
+    <div class="container">
+        <h1>Translation Agent Demo</h1>
+        <form id="translation-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="source_file">Source File (GCS URI)</label>
+                    <input type="text" id="source_file" name="source_file" value="gs://bucket_name/folder_name/file_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="target_language">Target Language</label>
+                    <input type="text" id="target_language" name="target_language" value="English" required>
+                </div>
+                <div class="form-group">
+                    <label for="gcs_bucket">GCS Bucket</label>
+                    <input type="text" id="gcs_bucket" name="gcs_bucket" value="GCS Bucket Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="max_chunk_size">Max Chunk Size (chars)</label>
+                    <input type="number" id="max_chunk_size" name="max_chunk_size" value="30000">
+                </div>
+                <div class="form-group">
+                    <label for="max_number_of_chunks">Max Number of Chunks (optional)</label>
+                    <input type="number" id="max_number_of_chunks" name="max_number_of_chunks" value="">
+                </div>
+                <div class="form-group">
+                    <label for="metadata_preview_size">Metadata Preview Size (chars)</label>
+                    <input type="number" id="metadata_preview_size" name="metadata_preview_size" value="30000">
+                </div>
+                <button type="submit" id="submit-btn">
+                    Translate
+                </button>
+            </div>
+        </form>
+
+        <div id="status-container">
+            <pre id="status-output"></pre>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

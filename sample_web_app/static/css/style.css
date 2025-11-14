@@ -1,0 +1,353 @@
+/**
+ * Translation Pipeline - Professional UI Styles
+ * Version: 2.0
+ *
+ * This stylesheet contains all custom styles for the translation pipeline interface.
+ * Built on top of Tailwind CSS for utility-first styling.
+ */
+
+/* ============================================================================
+   BASE STYLES
+   ============================================================================ */
+ body {
+            font-family: 'Roboto', sans-serif;
+            background-image: linear-gradient(
+                to bottom,
+                rgba(15, 23, 42, 0.9),
+                rgba(15, 23, 42, 1)
+            );
+            background-size: cover;
+            background-attachment: fixed;
+            color: #e2e8f0; /* slate-200 */
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(30, 41, 59, 0.95); /* slate-800 with transparency */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 800px;
+        }
+        h1 {
+            color: #1a73e8;
+            font-weight: 400;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 1rem;
+            margin-top: 0;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #94a3b8; /* slate-400 */
+        }
+        input[type="text"], input[type="number"], select {
+            background-color: #334155; /* slate-700 */
+            color: #e2e8f0; /* slate-200 */
+            padding: 0.75rem;
+            border: 1px solid #475569; /* slate-600 */
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6; /* blue-500 */
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+        .file-input-group {
+            border: 1px solid #475569; /* slate-600 */
+            border-radius: 4px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+        }
+        .file-input-group label {
+            font-weight: 400;
+            color: #cbd5e1; /* slate-300 */
+        }
+        textarea {
+            background-color: #334155; /* slate-700 */
+            color: #e2e8f0; /* slate-200 */
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #475569; /* slate-600 */
+            border-radius: 4px;
+            font-size: 1rem;
+            min-height: 80px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            grid-column: 1 / -1;
+            justify-self: start;
+        }
+        button:hover {
+            background-color: #185abc;
+        }
+        #status-container {
+            margin-top: 2rem;
+            background-color: #1e293b; /* slate-800 */
+            border-left: 4px solid #3b82f6; /* blue-500 */
+            padding: 1rem;
+            font-size: 10pt;
+        }
+        #status {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+
+/* Background gradient overlay */
+.app-background {
+    background-image: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.9),
+        rgba(15, 23, 42, 1)
+    ),
+    url('/static/images/background_blue.png');
+    background-size: 100%;
+    background-attachment: fixed;
+}
+
+/* ============================================================================
+   CUSTOM SCROLLBAR
+   ============================================================================ */
+
+/* Terminal/Status output scrollbar */
+#status-output::-webkit-scrollbar {
+    width: 8px;
+}
+
+#status-output::-webkit-scrollbar-track {
+    background: #1e293b; /* slate-800 */
+}
+
+#status-output::-webkit-scrollbar-thumb {
+    background-color: #475569; /* slate-600 */
+    border-radius: 4px;
+}
+
+#status-output::-webkit-scrollbar-thumb:hover {
+    background-color: #64748b; /* slate-500 */
+}
+
+/* Global scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #4a5568;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #64748b;
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* ============================================================================
+   FORM COMPONENTS
+   ============================================================================ */
+
+/* Input focus states */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="file"]:focus {
+    outline: none;
+}
+
+/* File upload hover state */
+.file-upload-label:hover {
+    border-color: #3b82f6; /* blue-500 */
+}
+
+/* ============================================================================
+   STATUS TERMINAL
+   ============================================================================ */
+
+#status-output {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+}
+
+/* Status message types */
+.status-message {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.25rem;
+}
+
+.status-icon {
+    margin-right: 0.5rem;
+    width: 1.25rem;
+    flex-shrink: 0;
+}
+
+/* ============================================================================
+   BUTTON STATES
+   ============================================================================ */
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+button:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+}
+
+button:not(:disabled):active {
+    transform: translateY(0);
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+/* Smooth transitions */
+.transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glass morphism effect */
+.glass-effect {
+    background: rgba(30, 41, 59, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Terminal window chrome */
+.terminal-dots {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.terminal-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.terminal-dot.red {
+    background-color: #ef4444;
+}
+
+.terminal-dot.yellow {
+    background-color: #eab308;
+}
+
+.terminal-dot.green {
+    background-color: #22c55e;
+}
+
+/* ============================================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .app-background {
+        background-size: cover;
+    }
+
+    #status-output {
+        font-size: 0.75rem;
+        height: 16rem;
+    }
+}
+
+/* ============================================================================
+   ACCESSIBILITY
+   ============================================================================ */
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+@media print {
+    .app-background {
+        background: white;
+    }
+
+    button {
+        display: none;
+    }
+
+    #status-output {
+        border: 1px solid #000;
+        max-height: none;
+    }
+}

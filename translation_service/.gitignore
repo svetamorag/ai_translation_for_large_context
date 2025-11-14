@@ -1,0 +1,12 @@
+# Python virtual environment
+my_env/
+venv/
+*.pyc
+__pycache__/
+
+# IDE and editor files
+.idea/
+.vscode/
+
+# Local secrets
+.env

@@ -1,0 +1,7 @@
+gunicorn
+google-cloud-storage
+google-cloud-aiplatform[adk,agent_engines]==1.106.0
+google-genai
+polib
+ebooklib
+beautifulsoup4
