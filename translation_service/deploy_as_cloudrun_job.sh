@@ -44,9 +44,14 @@ fi
 
 echo "Deploying Cloud Run Job '$JOB_NAME' to project '$PROJECT_ID' in region '$REGION'..."
 
+# --- Prepare Environment Variables for gcloud ---
+# The --env-vars-file flag expects YAML, but .env files are not YAML.
+# Instead, we'll read the .env file and format the variables for the --set-env-vars flag.
+# This filters out comments and empty lines, then joins them with commas.
+ENV_VARS_FOR_GCLOUD=$(grep -v '^#' "$ENV_FILE" | grep -v '^$' | tr '\n' ',' | sed 's/,$//')
+
 # --- Deployment Command ---
-# This command remains the same. It correctly passes the .env file to
-# the Cloud Run Job's *runtime* environment.
+# We now use --set-env-vars to pass the formatted environment variables.
 gcloud run jobs deploy "$JOB_NAME" \
   --project="$PROJECT_ID" \
   --region="$REGION" \
@@ -54,5 +59,6 @@ gcloud run jobs deploy "$JOB_NAME" \
   --max-retries=1 \
   --service-account="$SERVICE_ACCOUNT" \
   --task-timeout="10h" \
-
+  --set-env-vars="$ENV_VARS_FOR_GCLOUD"
+  
 echo "Deployment successful."
