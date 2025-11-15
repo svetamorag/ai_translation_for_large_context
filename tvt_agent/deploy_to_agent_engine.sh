@@ -31,5 +31,6 @@ adk deploy agent_engine \
     --project="${PROJECT_ID}" \
     --region="${LOCATION}" \
     --staging_bucket="gs://${STAGING_BUCKET_NAME}" \
-    --display_name="Translation Editorial Team" 
+    --display_name="Translation Editorial Team" \
+    --agent_engine_id="7458396389530140672" \
     .
