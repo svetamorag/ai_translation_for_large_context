@@ -1,11 +1,13 @@
 from google.cloud import storage
+from google.api_core import exceptions
 import re
 import logging
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 storage_client = storage.Client()
 
-def read_file_from_gcs(gcs_uri: str) -> str:
+def read_file_from_gcs(gcs_uri: str) -> Optional[str]:
     """
     Reads the content of a file from a Google Cloud Storage URI.
 
@@ -13,20 +15,24 @@ def read_file_from_gcs(gcs_uri: str) -> str:
         gcs_uri: The GCS URI of the file to read (e.g., "gs://bucket-name/path/to/file.txt").
 
     Returns:
-        The content of the file as a string.
+        The content of the file as a string, or None if the file does not exist.
     """
     logger.info(f"Reading file from GCS: {gcs_uri}")
     match = re.match(r"gs://([^/]+)/(.+)", gcs_uri)
     if not match:
         raise ValueError(f"Invalid GCS URI: {gcs_uri}")
 
+    bucket_name, blob_name = match.groups()
     try:
-        bucket_name, blob_name = match.groups()
         bucket = storage_client.bucket(bucket_name)
         blob = bucket.blob(blob_name)
 
-        return blob.download_as_text()
-    except Exception as e:
+        if not blob.exists():
+            logger.warning(f"File not found at GCS URI: {gcs_uri}")
+            return None
+
+        return blob.download_as_text(encoding="utf-8")
+    except exceptions.GoogleAPICallError as e:
         logger.error(f"Error reading file from GCS: {e}", exc_info=True)
         raise
 

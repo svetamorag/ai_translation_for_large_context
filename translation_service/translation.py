@@ -55,7 +55,7 @@ from vertexai import agent_engines
 
 # Document processing imports
 import polib
-from epub_reader import EPUBHandler, read_epub_to_html, write_html_to_epub
+from epub_reader import EPUBHandler, read_epub_to_text
 
 
 # Local imports
@@ -64,7 +64,7 @@ from prompts import (
     EXTRACT_STYLE_PROMPT,
     TRANSLATION_PROMPT_TEMPLATE
 )
-import translation_service.translation_config as translation_config
+import translation_config
  
 # Import readers for reference, but logic will be in-class
 from po_reader import read_po_to_text, assemble_po_from_text
@@ -81,7 +81,7 @@ if not translation_config.PROJECT_ID or not translation_config.LOCATION or not t
     raise ValueError(
         "PROJECT_ID, LOCATION, and AGENT_ENGINE_ID must be set in the environment."
     )
-
+print (translation_config.PROJECT_ID, translation_config.LOCATION, translation_config.AGENT_ENGINE_ID)
 vertexai.init(project=translation_config.PROJECT_ID, location=translation_config.LOCATION)
 _remote_agent_app = agent_engines.get(translation_config.AGENT_ENGINE_ID)
 
@@ -573,7 +573,7 @@ class DocumentReader:
         try:
             # Use the new EPUBHandler
             handler = EPUBHandler(file_path)
-            html_content = handler.read_epub_to_html()
+            html_content = handler.read_epub_to_text()
             
             # Store the handler as metadata so we can access book info later
             metadata = {
@@ -937,52 +937,30 @@ class TranslationPipeline:
         
         Args:
             final_doc_path: GCS path to the final translated HTML document
-            local_file: Path to the original EPUB file (for metadata extraction)
+            local_file: Path to the original EPUB file (unused in new implementation, kept for signature consistency)
         """
-        self.logger.info("  - Assembling final .epub file from translated HTML...")
+        self.logger.info("  - Saving final translated EPUB content as a text file...")
         try:
-            # Download the translated HTML
-            final_html_local_path = self.gcs.download_file(final_doc_path)
-            
-            with open(final_html_local_path, 'r', encoding='utf-8') as f:
-                translated_html = f.read()
-            
-            # Extract metadata from original EPUB
-            original_handler = EPUBHandler(local_file)
-            original_metadata = {
-                'title': original_handler.metadata.get('title', 'Translated Book'),
-                'author': original_handler.metadata.get('author', 'Unknown')
-            }
+            # Read the final translated content directly from GCS
+            final_content = self.gcs.read_blob_text(final_doc_path.replace(f"gs://{self.config.gcs_bucket}/", ""))
             
             # Create output filename
             original_basename = os.path.basename(self.config.source_file)
-            assembled_epub_filename = f"assembled_{original_basename}"
-            assembled_epub_local_path = os.path.join("/tmp", assembled_epub_filename)
+            # Change the extension to .txt to reflect the new format
+            assembled_filename = f"assembled_{Path(original_basename).stem}.txt"
             
-            # Write HTML to EPUB
-            write_html_to_epub(
-                html_content=translated_html,
-                output_path=assembled_epub_local_path,
-                title=f"{original_metadata['title']} ({self.config.target_language})",
-                author=original_metadata['author']
-            )
+            final_blob_path = f"{self.config.gcs_folder.strip('/')}/{assembled_filename}"
             
             # Upload to GCS
             self.gcs.upload(
-                local_path=assembled_epub_local_path,
-                blob_path=f"{self.config.gcs_folder.strip('/')}/{assembled_epub_filename}"
+                blob_path=final_blob_path,
+                content=final_content
             )
             
             self.logger.info(
-                f"  - Final .epub file saved to GCS: "
-                f"{self.config.gcs_folder.strip('/')}/{assembled_epub_filename}"
+                f"  - Final translated content saved to GCS as a text file: "
+                f"{final_blob_path}"
             )
-            
-            # Cleanup temporary files
-            if os.path.exists(final_html_local_path):
-                os.remove(final_html_local_path)
-            if os.path.exists(assembled_epub_local_path):
-                os.remove(assembled_epub_local_path)
                 
         except Exception as e:
             self.logger.warning(f"Failed to assemble .epub file: {e}", exc_info=True)
@@ -1166,8 +1144,8 @@ class TranslationPipeline:
                     # This assumes the agent's service account has GCS read access.
                     prompt_url = f"gs://{self.config.gcs_bucket}/{prompt_blob.name}"
                     translated_url = f"gs://{self.config.gcs_bucket}/{translated_blob_path}"
-
-
+                    print ("prompt URL:" + prompt_url)
+                    print ("translated URL:" +translated_url)
                     # Call validation agent
                     validation_result = validate_translation_with_agent(
                         prompt_url,
@@ -1184,7 +1162,7 @@ class TranslationPipeline:
                     agent_saved_gcs_path = f"{translated_folder}{agent_saved_filename}"
 
                     # Read the actual validated content that the agent saved to GCS.
-                    final_content = self.gcs.read_blob_text(agent_saved_gcs_path)
+                    #final_content = self.gcs.read_blob_text(agent_saved_gcs_path)
 
                     status_callback(
                         f"  - Validation complete for chunk {idx}. "
