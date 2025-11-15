@@ -8,3 +8,5 @@ entity_validator= Agent(
     instruction=ENTITY_VALIDATOR_INSTRUCTION,
         output_key="suggested_entity_edits" 
 )
+
+root_agent = entity_validator

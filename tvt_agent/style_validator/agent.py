@@ -8,3 +8,5 @@ style_validator = Agent(
     instruction=STYLE_VALIDATOR_INSTRUCTION,
     output_key="suggested_style_edits" 
 )
+
+root_agent = style_validator
