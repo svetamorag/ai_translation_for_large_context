@@ -1,0 +1,2 @@
+[opentelemetry_instrumentor]
+google-genai = opentelemetry.instrumentation.google_genai:GoogleGenAiSdkInstrumentor

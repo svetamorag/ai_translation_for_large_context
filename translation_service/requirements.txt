@@ -1,6 +1,6 @@
 gunicorn
 google-cloud-storage
-google-cloud-aiplatform[adk,agent_engines]==1.106.0
+google-cloud-aiplatform[adk,agent_engines]
 google-genai
 polib
 ebooklib

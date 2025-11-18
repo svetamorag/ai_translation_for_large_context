@@ -19,7 +19,7 @@ Handles the complete translation pipeline:
 gcloud services enable aiplatform.googleapis.com
 gcloud services enable storage-api.googleapis.com
 
-# Deploy tvt_agent FIRST to get AGENT_ENGINE_ID!
+# Deploy root_agent FIRST to get AGENT_ENGINE_ID!
 # Save the AGENT_ENGINE_ID from output
 ```
 

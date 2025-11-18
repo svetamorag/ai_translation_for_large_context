@@ -33,7 +33,7 @@ This solution translates large documents while maintaining:
 
 ## Project Structure
 
-### 1. [tvt_agent](./tvt_agent/README.md)
+### 1. [root_agent](./root_agent/README.md)
 Multi-agent validation system for quality assurance (entity, style, editorial review).
 
 ### 2. [translation_service](./translation_service/README.md)
@@ -72,7 +72,7 @@ export JOB_SERVICE_ACCOUNT="service_account_that_will_run_the_cloudrun_job"
     ```
 
 2. **Set up each component in this order** (follow detailed instructions in sub-project READMEs):
-   - [Deploy Translation Validation Agent](./tvt_agent/README.md#deployment)
+   - [Deploy Translation Validation Agent](./root_agent/README.md#deployment)
    - Update the translation_service/.env with the new AGENT_ENGINE_ID
    - [Deploy Translation Service](./translation_service/README.md#deployment)
     - Update the translation_service/.env with the new AGENT_ENGINE_ID

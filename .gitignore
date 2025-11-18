@@ -10,3 +10,6 @@ __pycache__/
 
 # Local secrets
 .env
+
+#Local bash files
+local_*.sh

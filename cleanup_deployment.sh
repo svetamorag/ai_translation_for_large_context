@@ -85,10 +85,10 @@ set -e
 
 echo "Cleaning up TVT Agent (Reasoning Engine)..."
 
-if [ -f "tvt_agent/cleanup_agent.py" ]; then
-    python3 tvt_agent/cleanup_agent.py
+if [ -f "root_agent/cleanup_agent.py" ]; then
+    python3 root_agent/cleanup_agent.py
 else
-    echo "tvt_agent/cleanup_agent.py not found. Skipping agent cleanup."
+    echo "root_agent/cleanup_agent.py not found. Skipping agent cleanup."
 fi
 
 echo ""
